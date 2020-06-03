@@ -1,4 +1,13 @@
-.PHONY: run test proto
+PKG_LIST := $(shell go list ./... | grep -v /vendor/)
+GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/ | grep -v _test.go)
+
+.PHONY: run lint test build deploy race coverage coverhtml
+
+lint: ## Lint the files
+	@golangci-lint run ${${PKG}/...}
+
+test: ## Run unittests
+	@go test -short ${PKG_LIST}
 
 run :
 	go run main.go
@@ -17,3 +26,6 @@ docker-stop:
 
 proto:
 	protoc -I proto/ proto/messages.proto --go_out=plugins=grpc:proto
+
+mock-message:
+	@mockgen -source=./internal/messages/repository/repository.go -destination=./internal/mock/mock_messages.go -package=mock
