@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+// The MessageService service definition.
+service MessageService {
+  // Sends a greeting
+  rpc InsertMessage (MessageRequest) returns (MessageResponse) {}
+  rpc GetAllMessages (google.protobuf.Empty) returns (MessagesResponse) {}
+}
+
+// The request message containing the body's message.
+message MessageRequest {
+  string body = 1;
+}
+
+// The response message containing the greetings
+message MessageResponse {
+  string body = 1;
+}
+
+message MessagesResponse {
+  repeated MessageResponse body = 1;
+}
+
+
