@@ -12,9 +12,6 @@ test: ## Run unittests
 run :
 	go run main.go
 
-test:
-	go test ./... -v
-
 docker-build:
 	docker build -t onboard-service .
 
