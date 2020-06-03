@@ -1,10 +1,7 @@
 PKG_LIST := $(shell go list ./... | grep -v /vendor/)
 GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/ | grep -v _test.go)
 
-.PHONY: run lint test build deploy race coverage coverhtml
-
-lint: ## Lint the files
-	@golangci-lint run ${${PKG}/...}
+.PHONY: run test build deploy race coverage coverhtml
 
 test: ## Run unittests
 	@go test -short ${PKG_LIST}
