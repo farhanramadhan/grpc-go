@@ -3,6 +3,9 @@
 run :
 	go run main.go
 
+test:
+	go test ./... -v
+
 docker-build:
 	docker build -t onboard-service .
 
@@ -17,3 +20,6 @@ docker-stop:
 
 proto:
 	protoc -I proto/ proto/messages.proto --go_out=plugins=grpc:proto
+
+mock-message:
+	@mockgen -source=./internal/messages/repository/repository.go -destination=./internal/mock/mock_messages.go -package=mock
