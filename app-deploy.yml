@@ -23,21 +23,19 @@ spec:
         - image: asia.gcr.io/warung-support/${IMAGE_NAME}:${IMAGE_VERSION}
           name: ${IMAGE_NAME}
           imagePullPolicy: Always
+          env:
+            - name: FOR_GODS_SAKE_PLEASE_REDEPLOY
+              value: 'THIS_STRING_IS_REPLACED_DURING_BUILD'
           ports:
-            - containerPort: 8080
+            - containerPort: 8081
           readinessProbe:
-            httpGet:
-              path: /farhan-onboard/healthz
-              port: 8080
-              scheme: HTTP
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:8081"]
             initialDelaySeconds: 5
-            periodSeconds: 5
           livenessProbe:
-            httpGet:
-              path: /farhan-onboard/healthz
-              port: 8080
-            initialDelaySeconds: 30
-            timeoutSeconds: 1
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:8081"]
+            initialDelaySeconds: 10  
       imagePullSecrets:
         - name: gcr-json-key
 
@@ -52,9 +50,9 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 50054
-      name: http
-      targetPort: 8080
+    - name: ${IMAGE_NAME}
+      port: 50055
+      targetPort: 8081
       protocol: TCP
   selector:
     app: ${IMAGE_NAME}
@@ -78,7 +76,7 @@ spec:
         - destination:
             host: ${IMAGE_NAME}.merchant.svc.cluster.local
             port:
-              number: 50054
+              number: 50055
       retries:
         attempts: 3
         perTryTimeout: 2s
