@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${IMAGE_NAME}
+  name: grpc-${IMAGE_NAME}
   namespace: merchant
   labels:
-    app: ${IMAGE_NAME}
+    app: grpc-${IMAGE_NAME}
     squad: komunitas-pintar
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ${IMAGE_NAME}
+      app: grpc-${IMAGE_NAME}
   template:
     metadata:
       labels:
-        app: ${IMAGE_NAME}
+        app: grpc-${IMAGE_NAME}
     spec:
       terminationGracePeriodSeconds: 30
       nodeSelector:
         warpin: services
       containers:
         - image: asia.gcr.io/warung-support/${IMAGE_NAME}:${IMAGE_VERSION}
-          name: ${IMAGE_NAME}
+          name: grpc-${IMAGE_NAME}
           imagePullPolicy: Always
           env:
             - name: FOR_GODS_SAKE_PLEASE_REDEPLOY
@@ -43,10 +43,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ${IMAGE_NAME}
+  name: grpc-${IMAGE_NAME}
   namespace: merchant
   labels:
-    app: ${IMAGE_NAME}
+    app: grpc-${IMAGE_NAME}
 spec:
   type: NodePort
   ports:
@@ -55,13 +55,13 @@ spec:
       targetPort: 8081
       protocol: TCP
   selector:
-    app: ${IMAGE_NAME}
+    app: grpc-${IMAGE_NAME}
 
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: ${IMAGE_NAME}
+  name: grpc-${IMAGE_NAME}
   namespace: istio-system
 spec:
   hosts:
@@ -74,7 +74,7 @@ spec:
             prefix: "/farhan-onboard/"
       route:
         - destination:
-            host: ${IMAGE_NAME}.merchant.svc.cluster.local
+            host: grpc-${IMAGE_NAME}.merchant.svc.cluster.local
             port:
               number: 50055
       retries:
