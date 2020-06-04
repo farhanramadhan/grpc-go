@@ -35,7 +35,8 @@ spec:
           livenessProbe:
             exec:
               command: ["/bin/grpc_health_probe", "-addr=:8081"]
-            initialDelaySeconds: 10  
+            initialDelaySeconds: 10
+          args: ["grpc"]
       imagePullSecrets:
         - name: gcr-json-key
 
