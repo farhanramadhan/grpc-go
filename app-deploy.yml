@@ -50,7 +50,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - name: ${IMAGE_NAME}
+    - name: grpc-${IMAGE_NAME}
       port: 50055
       targetPort: 8081
       protocol: TCP
