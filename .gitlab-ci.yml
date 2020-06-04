@@ -54,7 +54,5 @@ deploy_dev:
     - sed -ie "s/THIS_STRING_IS_REPLACED_DURING_BUILD/$CI_PIPELINE_ID/g" ./app-deploy.yml
     - cat ./app-deploy.yml | envsubst | envsubst | kubectl apply -f -
 
-  when: manual
-
   only:
     - master

@@ -24,7 +24,6 @@ spec:
           name: ${IMAGE_NAME}
           imagePullPolicy: Always
           ports:
-            - containerPort: 8081
             - containerPort: 8080
           readinessProbe:
             httpGet:
@@ -33,14 +32,12 @@ spec:
               scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 5
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:8081"]
-            initialDelaySeconds: 5
             livenessProbe:
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:8081"]
-            initialDelaySeconds: 10
-          args: ["grpc"]     
+              httpGet:
+                path: /farhan-onboard/healthz
+                port: 8080
+              initialDelaySeconds: 30
+              timeoutSeconds: 1
       imagePullSecrets:
         - name: gcr-json-key
 
@@ -55,10 +52,6 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 50055
-      name: grpc
-      targetPort: 8081
-      protocol: TCP
     - port: 50054
       name: http
       targetPort: 8080
@@ -86,7 +79,6 @@ spec:
             host: ${IMAGE_NAME}.merchant.svc.cluster.local
             port:
               number: 50054
-              number: 50055
       retries:
         attempts: 3
         perTryTimeout: 2s
