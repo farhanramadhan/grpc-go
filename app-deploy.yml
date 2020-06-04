@@ -56,9 +56,11 @@ spec:
   type: NodePort
   ports:
     - port: 50055
+      name: grpc
       targetPort: 8081
       protocol: TCP
     - port: 50054
+      name: http
       targetPort: 8080
       protocol: TCP
   selector:
