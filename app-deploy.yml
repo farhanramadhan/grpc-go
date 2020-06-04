@@ -25,7 +25,14 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
+            - containerPort: 8080
           readinessProbe:
+            httpGet:
+              path: /farhan-onboard/healthz
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
             exec:
               command: ["/bin/grpc_health_probe", "-addr=:8081"]
             initialDelaySeconds: 5
@@ -51,6 +58,9 @@ spec:
     - port: 50055
       targetPort: 8081
       protocol: TCP
+    - port: 50054
+      targetPort: 8080
+      protocol: TCP
   selector:
     app: ${IMAGE_NAME}
 
@@ -73,6 +83,7 @@ spec:
         - destination:
             host: ${IMAGE_NAME}.merchant.svc.cluster.local
             port:
+              number: 50054
               number: 50055
       retries:
         attempts: 3
