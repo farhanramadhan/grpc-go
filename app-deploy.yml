@@ -56,7 +56,7 @@ spec:
   type: NodePort
   ports:
     - name: http
-      port: 50054
+      port: 50068
       targetPort: 8080
       protocol: TCP
   selector:
@@ -81,7 +81,7 @@ spec:
         - destination:
             host: ${IMAGE_NAME}.merchant.svc.cluster.local
             port:
-              number: 50054
+              number: 50068
       retries:
         attempts: 3
         perTryTimeout: 2s
