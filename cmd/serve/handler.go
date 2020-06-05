@@ -20,6 +20,33 @@ func NewRouteHandler(messageSvc services.MessageServiceInterface) *routeHandler 
 	}
 }
 
+func (rh *routeHandler) HealthCheck(w http.ResponseWriter, r *http.Request) {
+	keys := r.URL.Query()["key"]
+
+	msg := "World"
+	if len(keys) > 0 {
+		msg = (keys[0])
+	}
+
+	payload := struct {
+		Status  string `json:"status"`
+		Message string `json:"message"`
+	}{
+
+		Status:  "Success",
+		Message: "Hello " + msg,
+	}
+
+	response, err := json.Marshal(payload)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(response)
+}
+
 func (rh *routeHandler) InsertMessage(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
