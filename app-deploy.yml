@@ -5,7 +5,6 @@ metadata:
   namespace: merchant
   labels:
     app: ${IMAGE_NAME}
-    squad: komunitas-pintar
 spec:
   replicas: 1
   selector:
