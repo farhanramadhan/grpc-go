@@ -55,7 +55,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - name: http
+    - name: http-${IMAGE_NAME}
       port: 50068
       targetPort: 8080
       protocol: TCP
@@ -79,7 +79,7 @@ spec:
             prefix: "/farhan-onboard-http"
       route:
         - destination:
-            host: ${IMAGE_NAME}.merchant.svc.cluster.local
+            host: http-${IMAGE_NAME}.merchant.svc.cluster.local
             port:
               number: 50068
       retries:
