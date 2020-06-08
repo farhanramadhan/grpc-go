@@ -79,7 +79,7 @@ spec:
             prefix: "/farhan-onboard-http/"
       route:
         - destination:
-            host: http-${IMAGE_NAME}.merchant.svc.cluster.local
+            host: ${IMAGE_NAME}.merchant.svc.cluster.local
             port:
               number: 50068
       retries:
