@@ -23,7 +23,7 @@ func NewRouteHandler(messageSvc services.MessageServiceInterface) *routeHandler 
 
 	conn, err := grpc.Dial("onboard-service.merchant.svc.cluster.local:50069", grpc.WithInsecure())
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	client := proto.NewMessageServiceClient(conn)
 
