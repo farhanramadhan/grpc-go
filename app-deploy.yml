@@ -42,14 +42,6 @@ spec:
               value: 'THIS_STRING_IS_REPLACED_DURING_BUILD'
           ports:
             - containerPort: 8081
-          readinessProbe:
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:8081"]
-            initialDelaySeconds: 5
-          livenessProbe:
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:8081"]
-            initialDelaySeconds: 10
       imagePullSecrets:
         - name: gcr-json-key
 
