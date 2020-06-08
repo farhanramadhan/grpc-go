@@ -76,7 +76,7 @@ spec:
   http:
     - match:
         - uri:
-            prefix: "/farhan-onboard-http"
+            prefix: "/farhan-onboard-http/"
       route:
         - destination:
             host: http-${IMAGE_NAME}.merchant.svc.cluster.local
