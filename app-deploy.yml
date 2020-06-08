@@ -35,12 +35,6 @@ spec:
               scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /farhan-onboard-http/healthz
-              port: 8080
-            initialDelaySeconds: 30
-            timeoutSeconds: 1
       imagePullSecrets:
         - name: gcr-json-key
 
