@@ -3,20 +3,35 @@ package serve
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
-	"time"
 
+	"gitlab.warungpintar.co/farhan.ramadhan/onboard-service/proto"
+	"google.golang.org/grpc"
+
+	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/gorilla/mux"
 	"gitlab.warungpintar.co/farhan.ramadhan/onboard-service/internal/services"
 )
 
 type routeHandler struct {
-	messageSvc services.MessageServiceInterface
+	messageSvc        services.MessageServiceInterface
+	messageGrpcClient proto.MessageServiceClient
 }
 
 func NewRouteHandler(messageSvc services.MessageServiceInterface) *routeHandler {
+
+	conn, err := grpc.Dial("onboard-service.merchant.svc.cluster.local:50069", grpc.WithInsecure())
+	if err != nil {
+		log.Fatal(err)
+	}
+	client := proto.NewMessageServiceClient(conn)
+
+	log.Println("GRPC Connected To onboard-service.merchant.svc.cluster.local:50069")
+
 	return &routeHandler{
-		messageSvc: messageSvc,
+		messageSvc:        messageSvc,
+		messageGrpcClient: client,
 	}
 }
 
@@ -52,7 +67,9 @@ func (rh *routeHandler) InsertMessage(w http.ResponseWriter, r *http.Request) {
 
 	message := params["message"]
 
-	err := rh.messageSvc.InsertMessage(context.Background(), message)
+	_, err := rh.messageGrpcClient.InsertMessage(context.Background(), &proto.MessageRequest{
+		Body: message,
+	})
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(400)
@@ -65,7 +82,7 @@ func (rh *routeHandler) InsertMessage(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rh *routeHandler) GetAllMessages(w http.ResponseWriter, r *http.Request) {
-	messages, err := rh.messageSvc.GetAllMessages(context.Background())
+	messages, err := rh.messageGrpcClient.GetAllMessages(context.Background(), &empty.Empty{})
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(400)
@@ -77,19 +94,16 @@ func (rh *routeHandler) GetAllMessages(w http.ResponseWriter, r *http.Request) {
 		Data struct {
 			Length   int `json:"length"`
 			Messages []struct {
-				Body      string    `json:"body"`
-				CreatedAt time.Time `json:"created_at"`
+				Body string `json:"body"`
 			} `json:"messages"`
 		} `json:"data"`
 	}
 
-	for _, v := range messages {
+	for _, v := range messages.Body {
 		var message struct {
-			Body      string    `json:"body"`
-			CreatedAt time.Time `json:"created_at"`
+			Body string `json:"body"`
 		}
 
-		message.CreatedAt = v.CreatedAt
 		message.Body = v.Body
 
 		data.Data.Messages = append(data.Data.Messages, message)

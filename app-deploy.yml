@@ -34,6 +34,22 @@ spec:
               scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 5
+        - image: asia.gcr.io/warung-support/${IMAGE_NAME}:${IMAGE_VERSION}
+          name: ${IMAGE_NAME}
+          imagePullPolicy: Always
+          env:
+            - name: FOR_GODS_SAKE_PLEASE_REDEPLOY
+              value: 'THIS_STRING_IS_REPLACED_DURING_BUILD'
+          ports:
+            - containerPort: 8081
+          readinessProbe:
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:8081"]
+            initialDelaySeconds: 5
+          livenessProbe:
+            exec:
+              command: ["/bin/grpc_health_probe", "-addr=:8081"]
+            initialDelaySeconds: 10
       imagePullSecrets:
         - name: gcr-json-key
 
@@ -51,6 +67,10 @@ spec:
     - name: http-${IMAGE_NAME}
       port: 50068
       targetPort: 8080
+      protocol: TCP
+    - name: grpc-${IMAGE_NAME}
+      port: 50069
+      targetPort: 8081
       protocol: TCP
   selector:
     app: ${IMAGE_NAME}

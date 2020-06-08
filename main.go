@@ -37,7 +37,7 @@ func startServer() {
 
 	router := serve.NewRouter(handler)
 
-	// go startGRPCServer(svc)
+	go startGRPCServer(svc)
 
 	log.Println("Starting server on port ", port)
 

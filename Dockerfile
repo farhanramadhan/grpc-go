@@ -17,6 +17,6 @@ WORKDIR /home/app
 
 COPY --from=0 /app/app .
 
-EXPOSE 8080
+EXPOSE 8080 8081
 
 ENTRYPOINT [ "./app" ]
