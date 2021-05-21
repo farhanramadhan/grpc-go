@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"gitlab.warungpintar.co/farhan.ramadhan/onboard-service/proto"
+	gen "gitlab.warungpintar.co/farhan.ramadhan/onboard-service/proto"
 	"google.golang.org/grpc/reflection"
 
 	"gitlab.warungpintar.co/farhan.ramadhan/onboard-service/cmd/grpc"
@@ -62,7 +62,7 @@ func startGRPCServer(svc services.MessageServiceInterface) {
 
 	reflection.Register(grpcServer.Server)
 
-	proto.RegisterMessageServiceServer(grpcServer.Server, handler)
+	gen.RegisterMessageServiceServer(grpcServer.Server, handler)
 
 	log.Println("Starting GRPC Server on port ", port)
 

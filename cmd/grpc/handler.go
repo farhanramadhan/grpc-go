@@ -3,7 +3,7 @@ package grpc
 import (
 	"context"
 
-	"gitlab.warungpintar.co/farhan.ramadhan/onboard-service/proto"
+	gen "gitlab.warungpintar.co/farhan.ramadhan/onboard-service/proto"
 
 	"github.com/golang/protobuf/ptypes/empty"
 	"gitlab.warungpintar.co/farhan.ramadhan/onboard-service/internal/services"
@@ -19,34 +19,34 @@ func NewGrpcHandler(messageService services.MessageServiceInterface) *grpcHandle
 	}
 }
 
-func (gh *grpcHandler) InsertMessage(ctx context.Context, in *proto.MessageRequest) (*proto.MessageResponse, error) {
+func (gh *grpcHandler) InsertMessage(ctx context.Context, in *gen.MessageRequest) (*gen.MessageResponse, error) {
 	err := gh.messageSvc.InsertMessage(ctx, in.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	res := &proto.MessageResponse{
+	res := &gen.MessageResponse{
 		Body: in.Body,
 	}
 
 	return res, nil
 }
 
-func (gh *grpcHandler) GetAllMessages(ctx context.Context, in *empty.Empty) (*proto.MessagesResponse, error) {
+func (gh *grpcHandler) GetAllMessages(ctx context.Context, in *empty.Empty) (*gen.MessagesResponse, error) {
 	messages, err := gh.messageSvc.GetAllMessages(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	res := make([]*proto.MessageResponse, 0)
+	res := make([]*gen.MessageResponse, 0)
 	for _, message := range messages {
-		messageRes := &proto.MessageResponse{
+		messageRes := &gen.MessageResponse{
 			Body: message.Body,
 		}
 		res = append(res, messageRes)
 	}
 
-	messagesResponse := &proto.MessagesResponse{
+	messagesResponse := &gen.MessagesResponse{
 		Body: res,
 	}
 

@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"gitlab.warungpintar.co/farhan.ramadhan/onboard-service/proto"
+	gen "gitlab.warungpintar.co/farhan.ramadhan/onboard-service/proto"
 	"google.golang.org/grpc"
 
 	"github.com/golang/protobuf/ptypes/empty"
@@ -16,7 +16,7 @@ import (
 
 type routeHandler struct {
 	messageSvc        services.MessageServiceInterface
-	messageGrpcClient proto.MessageServiceClient
+	messageGrpcClient gen.MessageServiceClient
 }
 
 func NewRouteHandler(messageSvc services.MessageServiceInterface) *routeHandler {
@@ -24,7 +24,7 @@ func NewRouteHandler(messageSvc services.MessageServiceInterface) *routeHandler 
 	if err != nil {
 		log.Println(err)
 	}
-	client := proto.NewMessageServiceClient(conn)
+	client := gen.NewMessageServiceClient(conn)
 
 	log.Println("GRPC Connected To :8081")
 
@@ -66,7 +66,7 @@ func (rh *routeHandler) InsertMessage(w http.ResponseWriter, r *http.Request) {
 
 	message := params["message"]
 
-	_, err := rh.messageGrpcClient.InsertMessage(context.Background(), &proto.MessageRequest{
+	_, err := rh.messageGrpcClient.InsertMessage(context.Background(), &gen.MessageRequest{
 		Body: message,
 	})
 	if err != nil {

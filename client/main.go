@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/golang/protobuf/ptypes/empty"
-	"gitlab.warungpintar.co/farhan.ramadhan/onboard-service/proto"
+	gen "gitlab.warungpintar.co/farhan.ramadhan/onboard-service/proto"
 
 	"google.golang.org/grpc"
 )
@@ -15,9 +15,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	client := proto.NewMessageServiceClient(conn)
+	client := gen.NewMessageServiceClient(conn)
 
-	message, err := client.InsertMessage(context.Background(), &proto.MessageRequest{
+	message, err := client.InsertMessage(context.Background(), &gen.MessageRequest{
 		Body: "test1",
 	})
 	if err != nil {
@@ -25,7 +25,7 @@ func main() {
 	}
 	log.Println("Messages 1 :", message)
 
-	message, err = client.InsertMessage(context.Background(), &proto.MessageRequest{
+	message, err = client.InsertMessage(context.Background(), &gen.MessageRequest{
 		Body: "test2",
 	})
 	if err != nil {

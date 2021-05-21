@@ -1,7 +1,7 @@
 PKG_LIST := $(shell go list ./... | grep -v /vendor/)
 GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/ | grep -v _test.go)
 
-.PHONY: run test build deploy race coverage coverhtml
+.PHONY: run test build deploy race coverage coverhtml proto
 
 test: ## Run unittests
 	@go test -short ${PKG_LIST}
@@ -23,6 +23,11 @@ docker-stop:
 
 proto:
 	protoc -I proto/ proto/messages.proto --go_out=plugins=grpc:proto
+
+new:
+	protoc --go_out=. --go_opt=paths=source_relative \
+		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+		proto/messages.proto
 
 mock-message:
 	@mockgen -source=./internal/messages/repository/repository.go -destination=./internal/mock/mock_messages.go -package=mock
