@@ -20,14 +20,13 @@ type routeHandler struct {
 }
 
 func NewRouteHandler(messageSvc services.MessageServiceInterface) *routeHandler {
-
-	conn, err := grpc.Dial("onboard-service.merchant.svc.cluster.local:50069", grpc.WithInsecure())
+	conn, err := grpc.Dial(":8081", grpc.WithInsecure())
 	if err != nil {
 		log.Println(err)
 	}
 	client := proto.NewMessageServiceClient(conn)
 
-	log.Println("GRPC Connected To onboard-service.merchant.svc.cluster.local:50069")
+	log.Println("GRPC Connected To :8081")
 
 	return &routeHandler{
 		messageSvc:        messageSvc,
