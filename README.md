@@ -1,4 +1,4 @@
-## Onboard Service
+## GRPC GO DEMO
 ### Insert Message
 ```
 grpcurl -plaintext -d \
